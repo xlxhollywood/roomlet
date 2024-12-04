@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.MemberProfileMapper">
+    <select id="getMemberProfile" resultType="com.example.dto.MemberDTO">
+        SELECT memberId, password, nickName, createTime, isWithDraw, status
+        FROM member
+        WHERE memberId = #{id}
+    </select>
+
+    <insert id="insertMemberProfile" parameterType="com.example.dto.MemberDTO">
+        INSERT INTO member (memberId, password, nickName, isWithDraw, status, isAdmin)
+        VALUES (#{memberId}, #{password}, #{nickName}, #{isWithDraw}, #{status}, #{isAdmin})
+    </insert>
+
+    <update id="updateMemberProfile" parameterType="com.example.dto.MemberDTO">
+        UPDATE member
+        SET password=#{password},
+        nickName=#{nickName},
+        isWithDraw=#{isWithDraw},
+        status=#{status}
+        WHERE memberId = #{memberId}
+    </update>
+
+    <delete id="deleteMemberProfile" parameterType="String">
+        DELETE FROM member
+        WHERE memberId = #{id}
+    </delete>
+
+    <select id="findByIdAndPassword" resultType="com.example.dto.MemberDTO">
+        SELECT id, memberId, password, nickName, createTime, isWithDraw, status
+        FROM member
+        WHERE memberId = #{memberId}
+        AND password = #{password}
+        AND status != 'DELETE'
+    </select>
+
+    <select id="idCheck" resultType="int">
+        SELECT COUNT(id)
+        FROM member
+        WHERE memberId = #{memberId}
+    </select>
+
+    <update id="updatePassword" parameterType="com.example.dto.MemberDTO">
+        UPDATE member
+        SET password = #{password}
+        WHERE memberId = #{memberId}
+    </update>
+
+    <insert id="register">
+        INSERT INTO member (memberId, password, nickName, isWithDraw, status)
+        VALUES (#{memberId}, #{password}, #{nickName}, #{isWithDraw}, #{status})
+    </insert>
+
+
+
+
+</mapper>

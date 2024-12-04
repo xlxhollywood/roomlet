@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
-        <property name="driverClassName"  value="org.mariadb.jdbc.Driver" />
-        <property name="url" value="jdbc:mariadb://localhost:3306/db_name" />
-        <property name="username" value="db_id" />
-        <property name="password" value="db_pwd" />
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 데이터 소스 -->
+    <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver" />
+        <property name="url" value="jdbc:mariadb://walab.handong.edu:3306/OSS24_22101050" />
+        <property name="username" value="OSS24_22101050" />
+        <property name="password" value="ai1IW5mi" />
     </bean>
 
-    <bean id="jt" class="org.springframework.jdbc.core.JdbcTemplate" >
+    <!-- JdbcTemplate -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="ds" />
     </bean>
 
+    <!-- MyBatis SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="ds" />
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+    </bean>
+
+    <!-- MyBatis SqlSession -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <!-- MyBatis Mapper 스캐너 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.example.mapper" />
+    </bean>
+
+    <!-- 트랜잭션 매니저 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds" />
+    </bean>
+
+    <!-- 트랜잭션 어노테이션 활성화 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
 </beans>
