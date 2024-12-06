@@ -2,15 +2,12 @@ package com.example.controller;
 
 import com.example.dto.MemberDTO;
 import com.example.dto.PostDTO;
-import com.example.dto.response.CommonResponse;
-import com.example.service.impl.MemberServiceImpl;
 import com.example.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -19,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class PostController {
-    private final MemberServiceImpl memberService;
     private final PostServiceImpl postService;
 
     // TODO : 게시물 등록/수정/삭제/불러오기/자세히 보기/ 필터링
@@ -90,7 +86,6 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.ok("delete complete");
     }
-
 
 
 
