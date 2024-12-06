@@ -13,7 +13,7 @@ public interface PostService {
 
     void updatePost(PostDTO postDTO);
 
-    void deletePostById(int id);
+    void deletePost(int id); // 로그인 사용자 ID를 추가로 전달
 
 
 }

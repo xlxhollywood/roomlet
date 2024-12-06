@@ -3,7 +3,11 @@ package com.example.controller;
 import com.example.dto.MemberDTO;
 import com.example.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,10 +25,21 @@ public class MemberController {
 
     // login 과정에서 세션 설정해줘야함.
     @PostMapping("/login")
-    public MemberDTO login(@RequestBody MemberDTO memberDTO) {
-        return memberService.login(memberDTO.getMemberId(), memberDTO.getPassword());
+    public ResponseEntity<String> login(@RequestBody MemberDTO memberDTO, HttpSession session) {
+        MemberDTO member = memberService.login(memberDTO.getMemberId(), memberDTO.getPassword());
+        if (member != null) {
+            session.setAttribute("loginUser", member); // 세션에 사용자 정보 저장
+            return ResponseEntity.ok("Login successful");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
     }
 
+    // 로그아웃 처리
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        session.invalidate(); // 세션 무효화
+        return ResponseEntity.ok("Logout successful");
+    }
     // Id 로 멤버 상세조회
     @GetMapping("/{id}")
     public MemberDTO getMemberInfoByMemberId(@PathVariable int id) {

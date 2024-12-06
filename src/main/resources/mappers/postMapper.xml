@@ -42,4 +42,12 @@
         SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
         FROM post
     </select>
+
+    <!-- PostMapper.xml -->
+    <select id="getPostOwnerId" parameterType="int" resultType="int">
+        SELECT memberId
+        FROM post
+        WHERE id = #{postId}
+    </select>
+
 </mapper>

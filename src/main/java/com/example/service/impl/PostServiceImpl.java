@@ -8,6 +8,8 @@ import com.example.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +22,6 @@ public class PostServiceImpl implements PostService {
     private final MemberMapper memberProfileMapper;
     @Override
     public void register(PostDTO postDTO) {
-        System.out.println("살려주세요 " + postDTO.getMId());
         MemberDTO memberDTO = memberProfileMapper.findMemberById(postDTO.getMId());
         if (memberDTO != null) {
             postDTO.setMId(memberDTO.getId());
@@ -47,7 +48,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostById(int id) {
-        postMapper.deletePostById(id);
+    public void deletePost(int id) {
+         postMapper.deletePostById(id);
+    }
+
+    public int getPostOwnerId(int postId) {
+        return postMapper.getPostOwnerId(postId); // Mapper 호출
     }
 }
