@@ -4,26 +4,42 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.mapper.PostMapper">
-    <insert id="register" parameterType="com.example.dto.PostDTO">
-        INSERT INTO post (title, contents, createTime, updateTime, views, memberId, fileId)
-        VALUES (#{title}, #{contents}, #{createTime}, #{updateTime}, #{views}, #{memberId}, #{fileId})
+
+    <!-- Insert Post -->
+    <insert id="insertPost" parameterType="com.example.dto.PostDTO">
+        INSERT INTO post (title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId)
+        VALUES (#{title}, #{contents}, #{kakaoUrl}, #{createTime}, #{updateTime}, #{fileUrl}, #{address}, #{status}, #{mId})
     </insert>
 
-    <select id="getAllPosts" resultType="com.example.dto.PostDTO">
-        SELECT title, contents, createTime, updateTime, views, memberId
+    <!-- Select Post by ID -->
+    <select id="selectPostById" parameterType="int" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
         FROM post
+        WHERE id = #{id}
     </select>
 
-    <update id="updatePosts" parameterType="com.example.dto.PostDTO">
+    <!-- Update Post -->
+    <update id="updatePost" parameterType="com.example.dto.PostDTO">
         UPDATE post
         SET title = #{title},
-        contents = #{contents}
-        WHERE memberId = #{memberId}
+        contents = #{contents},
+        kakaoUrl = #{kakaoUrl},
+        updateTime = #{updateTime},
+        fileUrl = #{fileUrl},
+        address = #{address},
+        status = #{status},
+        memberId = #{mId}
+        WHERE id = #{id}
     </update>
 
-    <delete id="deletePosts" parameterType="map">
-        DELETE FROM post
-        WHERE id = #{id}
-        AND memberId = #{memberId}
+    <!-- Delete Post -->
+    <delete id="deletePostById" parameterType="int">
+        DELETE FROM post WHERE id = #{id}
     </delete>
+
+    <!-- Select All Posts -->
+    <select id="selectAllPosts" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
+        FROM post
+    </select>
 </mapper>

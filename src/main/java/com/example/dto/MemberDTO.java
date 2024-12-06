@@ -11,18 +11,15 @@ import java.util.Date;
 @Setter
 @ToString
 public class MemberDTO {
+
     private Integer id;
     private String memberId;
     private String password;
     private String nickName;
-    private boolean isAdmin;
     private Date createTime;
-    private boolean isWithDraw;
-    private Status status;
-    private Date updateTime;
+    private String email;
+    private String address;
+    private String phone;
 
 
-    public enum Status {
-        DEFAULT, ADMIN, DELETED
-    }
 }

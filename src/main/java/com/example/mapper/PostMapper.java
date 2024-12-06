@@ -8,11 +8,9 @@ import java.util.List;
 @Mapper
 public interface PostMapper {
 
-    public int register(PostDTO postDTO);
-
-    public void updatePosts(PostDTO postDTO);
-
-    public void deletePosts(int id);
-
-    public List<PostDTO> getAllPosts();
+    void insertPost(PostDTO postDTO);
+    PostDTO selectPostById(int id);
+    void updatePost(PostDTO postDTO);
+    void deletePostById(int id);
+    List<PostDTO> selectAllPosts();
 }

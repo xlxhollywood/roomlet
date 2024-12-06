@@ -12,37 +12,25 @@ public interface MemberService {
 
     /**
      * 로그인
-     * @param id 사용자 ID
+     * @param memberId 사용자 ID
      * @param password 비밀번호
      * @return 로그인된 사용자 정보
      */
-    MemberDTO login(String id, String password);
+    MemberDTO login(String memberId, String password);
 
     /**
      * ID 중복 체크
-     * @param id 사용자 ID
+     * @param memberId 사용자 Id
      * @return 중복 여부 (true: 중복, false: 중복 아님)
      */
-    boolean isDuplicated(String id);
+    boolean isDuplicated(String memberId);
 
     /**
      * 회원 정보 조회
-     * @param memberId 사용자 ID
+     * @param id 사용자 식별 코드
      * @return 회원 정보
      */
-    MemberDTO getMemberInfo(String memberId);
+    MemberDTO getMemberInfo(int id);
 
-    /**
-     * 비밀번호 변경
-     * @param memberId 사용자 ID
-     * @param afterPassword 변경할 비밀번호
-     */
-    void updatePassword(String memberId, String afterPassword);
 
-    /**
-     * 회원 탈퇴
-     * @param id 사용자 ID
-     * @param password 사용자 비밀번호
-     */
-    void deleteId(String id, String password);
 }

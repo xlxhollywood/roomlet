@@ -5,12 +5,15 @@ import com.example.dto.PostDTO;
 import java.util.List;
 
 public interface PostService {
-    public void register(String memberId, PostDTO postDTO );
+    void register(PostDTO postDTO );
 
     List<PostDTO> getAllPosts();
 
-    public void updatePosts(PostDTO postDTO);
-    public void deletePosts(String memberId,int postId);
+    PostDTO getPostById(int id);
+
+    void updatePost(PostDTO postDTO);
+
+    void deletePostById(int id);
 
 
 }

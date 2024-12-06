@@ -18,6 +18,7 @@
         <org.spring.version>5.3.23</org.spring.version>
     </properties>
 
+
     <dependencies>
         <!-- Servlet API -->
         <dependency>
@@ -25,6 +26,12 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>5.7.8</version> <!-- Replace with the latest 5.7.x version -->
         </dependency>
 
         <!-- Spring Framework -->

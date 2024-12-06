@@ -2,7 +2,7 @@ package com.example.service.impl;
 
 import com.example.dto.MemberDTO;
 import com.example.dto.PostDTO;
-import com.example.mapper.MemberProfileMapper;
+import com.example.mapper.MemberMapper;
 import com.example.mapper.PostMapper;
 import com.example.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,15 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
-    private final MemberProfileMapper memberProfileMapper;
+    private final MemberMapper memberProfileMapper;
     @Override
-    public void register(String memberId, PostDTO postDTO) {
-        MemberDTO memberDTO = memberProfileMapper.getMemberProfile(memberId);
+    public void register(PostDTO postDTO) {
+        System.out.println("살려주세요 " + postDTO.getMId());
+        MemberDTO memberDTO = memberProfileMapper.findMemberById(postDTO.getMId());
         if (memberDTO != null) {
-            postDTO.setMemberId(memberDTO.getMemberId());
+            postDTO.setMId(memberDTO.getId());
             postDTO.setCreateTime(new Date());
-            postMapper.register(postDTO);
+            postMapper.insertPost(postDTO);
         } else {
             throw new IllegalArgumentException("Invalid memberId: member not found.");
         }
@@ -32,27 +33,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDTO> getAllPosts() {
-        return postMapper.getAllPosts();
+        return postMapper.selectAllPosts();
     }
 
     @Override
-    public void updatePosts(PostDTO postDTO) {
-        if(postDTO != null && postDTO.getId() != 0){
-            postMapper.updatePosts(postDTO);
-        } else {
-            log.error("updatePosts ERROR {}", postDTO);
-            throw new RuntimeException("updatePosts ERROR! 게시글 수정 메서드 확인 해주세요" + postDTO);
-
-        }
+    public PostDTO getPostById(int id) {
+        return postMapper.selectPostById(id);
     }
 
     @Override
-    public void deletePosts(String memberId, int postId) {
-        if(memberId != null && postId != 0){
-            postMapper.deletePosts(postId);
-        } else {
-            log.error("deletePosts ERROR {}", postId);
-            throw new RuntimeException("deletePosts ERROR! 게시글 삭제 메서드 확인 해주세요" + postId);
-        }
+    public void updatePost(PostDTO postDTO) {
+        postMapper.updatePost(postDTO);
+    }
+
+    @Override
+    public void deletePostById(int id) {
+        postMapper.deletePostById(id);
     }
 }
