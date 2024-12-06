@@ -10,10 +10,7 @@ import java.util.Date;
 public interface MemberProfileMapper {
 
     // 멤버 프로필 조회
-    MemberDTO getMemberProfile(@Param("id") String id);
-
-    // 멤버 프로필 삽입
-    int insertMemberProfile(MemberDTO memberDTO);
+    MemberDTO getMemberProfile(@Param("memberId") String memberId);
 
     // 멤버 삭제
     int deleteMemberProfile(@Param("id") String id);

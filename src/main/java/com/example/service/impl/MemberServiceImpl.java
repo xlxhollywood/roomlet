@@ -70,10 +70,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updatePassword(String id, String afterPassword) {
+    public void updatePassword(String memberId, String afterPassword) {
         // 회원 조회
-        MemberDTO memberDTO = getMemberInfo(id);
-
+        MemberDTO memberDTO = getMemberInfo(memberId);
+        System.out.println("호출됨");
+        System.out.println(memberDTO.getMemberId());
         // 비밀번호 업데이트
         memberDTO.setPassword(encryptSHA256(afterPassword));
         int updateCount = memberProfileMapper.updatePassword(memberDTO);

@@ -7,13 +7,8 @@
     <select id="getMemberProfile" resultType="com.example.dto.MemberDTO">
         SELECT memberId, password, nickName, createTime, isWithDraw, status
         FROM member
-        WHERE memberId = #{id}
+        WHERE memberId = #{memberId}
     </select>
-
-    <insert id="insertMemberProfile" parameterType="com.example.dto.MemberDTO">
-        INSERT INTO member (memberId, password, nickName, isWithDraw, status, isAdmin)
-        VALUES (#{memberId}, #{password}, #{nickName}, #{isWithDraw}, #{status}, #{isAdmin})
-    </insert>
 
     <update id="updateMemberProfile" parameterType="com.example.dto.MemberDTO">
         UPDATE member

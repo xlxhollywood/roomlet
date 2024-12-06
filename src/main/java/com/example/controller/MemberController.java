@@ -1,11 +1,8 @@
 package com.example.controller;
 
 import com.example.dto.MemberDTO;
-import com.example.mapper.MemberProfileMapper;
 import com.example.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,18 +25,18 @@ public class MemberController {
         return memberService.login(memberDTO.getMemberId(), memberDTO.getPassword());
     }
 
-
-    @GetMapping("/{id}")
-    public MemberDTO getMemberInfo(@PathVariable String id) {
-        return memberService.getMemberInfo(id);
+    // Id 로 멤버 상세조회
+    @GetMapping("/{memberId}")
+    public MemberDTO getMemberInfoByMemberId(@PathVariable String memberId) {
+        return memberService.getMemberInfo(memberId);
     }
-
-    @PutMapping("/{id}/password")
-    public String updatePassword(@PathVariable String id, @RequestParam String newPassword) {
-        memberService.updatePassword(id, newPassword);
+    // Id로 비밀번호 변경 가능 ..
+    @PutMapping("/{memberId}/password")
+    public String updatePassword(@PathVariable String memberId, @RequestParam String newPassword) {
+        memberService.updatePassword(memberId, newPassword);
         return "비밀번호 변경 성공";
     }
-
+    // 회원 탈퇴 기능
     @DeleteMapping("/{id}")
     public String deleteId(@PathVariable String id, @RequestParam String password) {
         memberService.deleteId(id, password);

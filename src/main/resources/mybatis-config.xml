@@ -11,5 +11,6 @@
     <mappers>
         <!-- 특정 매퍼 파일 명시 -->
         <mapper resource="mappers/memberMapper.xml" />
+        <mapper resource="mappers/postMapper.xml" />
     </mappers>
 </configuration>
