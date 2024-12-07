@@ -7,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 @Log4j2
@@ -87,6 +89,29 @@ public class PostController {
         return ResponseEntity.ok("delete complete");
     }
 
+    // 게시글 목록 페이지
+    @GetMapping("/list")
+    public String getPostList(Model model) {
+        List<PostDTO> posts = postService.getAllPosts();
+        model.addAttribute("posts", posts);
+        return "list";
+    }
 
+    // 게시글 추가 페이지
+    @GetMapping("/create")
+    public String createPost() {
+        return "create";
+    }
 
+    // 게시글 수정 페이지
+    @GetMapping("/edit")
+    public String editPost() {
+        return "edit";
+    }
+
+    // 게시글 자세히 보기 페이지
+    @GetMapping("/view")
+    public String viewPost() {
+        return "view";
+    }
 }
