@@ -4,6 +4,7 @@ import com.example.dto.MemberDTO;
 import com.example.dto.PostDTO;
 import com.example.service.impl.AwsS3Service;
 import com.example.service.impl.PostServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -26,21 +28,44 @@ public class PostController {
 
     // TODO : 게시물 등록/수정/삭제/불러오기/자세히 보기/ 필터링
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody PostDTO postDTO, HttpSession session) {
-        // 세션에서 로그인된 사용자 정보 가져오기
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
-        System.out.println("로그인 사용자 정보: " + loginUser);
-        if (loginUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please log in first.");
+    public ResponseEntity<String> createPost(
+            @RequestParam("post") String postJson, // JSON 데이터를 String으로 받음
+            @RequestParam(value = "multipartFile", required = false) List<MultipartFile> multipartFiles, // 파일은 선택사항
+            HttpSession session) {
+        try {
+            // JSON 데이터를 객체로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            PostDTO postDTO = objectMapper.readValue(postJson, PostDTO.class);
+
+            // 세션에서 로그인된 사용자 정보 가져오기
+            MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+            if (loginUser == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please log in first.");
+            }
+
+            // 작성자 ID 설정
+            postDTO.setMId(loginUser.getId());
+
+            // 파일 업로드 처리
+            if (multipartFiles != null && !multipartFiles.isEmpty()) {
+                List<String> fileUrls = awsS3Service.uploadFile(multipartFiles); // 다중 파일 업로드
+                postDTO.setFileUrl(String.join(",", fileUrls)); // 파일 URL을 ","로 연결하여 저장
+            } else {
+                // 파일이 없을 경우 빈 문자열 처리
+                postDTO.setFileUrl("");
+            }
+
+            // 데이터베이스에 저장
+            postService.register(postDTO);
+            return ResponseEntity.ok("Post created successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
-
-        // 작성자 ID를 PostDTO에 설정
-        postDTO.setMId(loginUser.getId());
-
-        // 글 작성 로직 실행
-        postService.register(postDTO);
-        return ResponseEntity.ok("Post created successfully.");
     }
+
+
+
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         List<PostDTO> posts = postService.getAllPosts();
@@ -55,7 +80,7 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updatePost(@PathVariable int id, @RequestBody PostDTO postDTO, HttpSession session) {
-        // 로그인 사용자 정보 가져오기
+        System.out.println("수정 메서드 호출됨");
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
         if (loginUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please log in first.");

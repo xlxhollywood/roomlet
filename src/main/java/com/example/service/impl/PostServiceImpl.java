@@ -22,15 +22,21 @@ public class PostServiceImpl implements PostService {
     private final MemberMapper memberProfileMapper;
     @Override
     public void register(PostDTO postDTO) {
+        // 작성자 확인
         MemberDTO memberDTO = memberProfileMapper.findMemberById(postDTO.getMId());
-        if (memberDTO != null) {
-            postDTO.setMId(memberDTO.getId());
-            postDTO.setCreateTime(new Date());
-            postMapper.insertPost(postDTO);
-        } else {
+        if (memberDTO == null) {
             throw new IllegalArgumentException("Invalid memberId: member not found.");
         }
+
+        // 작성자 ID 및 생성 시간 설정
+        postDTO.setMId(memberDTO.getId());
+        postDTO.setCreateTime(new Date());
+
+        // 게시물 저장
+        postMapper.insertPost(postDTO);
     }
+
+
 
     @Override
     public List<PostDTO> getAllPosts() {

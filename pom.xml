@@ -151,6 +151,11 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.33</version> <!-- 적합한 최신 버전 사용 -->
         </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+        </dependency>
 
 
 
