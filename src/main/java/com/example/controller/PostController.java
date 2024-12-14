@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dto.MemberDTO;
 import com.example.dto.PostDTO;
+import com.example.service.impl.AwsS3Service;
 import com.example.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import java.util.List;
 @Log4j2
 public class PostController {
     private final PostServiceImpl postService;
+    private final AwsS3Service awsS3Service;
 
     // TODO : 게시물 등록/수정/삭제/불러오기/자세히 보기/ 필터링
     @PostMapping
@@ -88,6 +92,13 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.ok("delete complete");
     }
+
+    @PostMapping("/files")
+    public ResponseEntity<?> uploadFile(@RequestParam("multipartFile") List<MultipartFile> multipartFiles) {
+        List<String> uploadedFiles = awsS3Service.uploadFile(multipartFiles);
+        return ResponseEntity.ok(uploadedFiles);
+    }
+
 
     // 게시글 목록 페이지
     @GetMapping("/list")
