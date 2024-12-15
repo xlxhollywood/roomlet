@@ -43,7 +43,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO login(String memberId, String password) {
         // DB에서 해당 ID의 사용자 정보 조회
+        System.out.println("로그인 요청 ID: " + memberId);
         MemberDTO member = memberProfileMapper.findMemberByMemberId(memberId);
+        System.out.println("DB 조회 결과: " + member);
 
         if (member == null) {
             throw new RuntimeException("로그인 실패: ID를 확인해주세요.");
