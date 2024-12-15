@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -44,7 +43,7 @@ public class PostController {
             }
 
             // 작성자 ID 설정
-            postDTO.setMId(loginUser.getId());
+            postDTO.setMid(loginUser.getId());
 
             // 파일 업로드 처리
             if (multipartFiles != null && !multipartFiles.isEmpty()) {
@@ -63,8 +62,6 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
-
-
 
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
@@ -87,10 +84,19 @@ public class PostController {
         }
 
         // 게시글 작성자 확인
-        int postOwnerId = postService.getPostOwnerId(id); // DB에서 작성자 ID 조회
+        int postOwnerId = postService.getPostOwnerId(id);
         if (loginUser.getId() != postOwnerId) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("EDIT : UNAUTHORIZED REQUEST.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("EDIT: UNAUTHORIZED REQUEST.");
         }
+
+        // 기존 데이터
+        PostDTO existingPost = postService.getPostById(id);
+        if (existingPost == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
+        }
+
+        // PostDTO에 mId 값 설정
+        postDTO.setMid(existingPost.getMid());
 
         // 게시글 수정
         postDTO.setId(id);
@@ -109,6 +115,8 @@ public class PostController {
 
         // 게시글 작성자 확인
         int postOwnerId = postService.getPostOwnerId(id); // DB에서 작성자 ID 조회
+        System.out.println("작성자 ID: " + postOwnerId + ", 로그인된 사용자 ID: " + loginUser.getId());
+
         if (loginUser.getId() != postOwnerId) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("DELETE: UNAUTHORIZED REQUEST.");
         }
@@ -124,6 +132,53 @@ public class PostController {
         return ResponseEntity.ok(uploadedFiles);
     }
 
+    // 상태가 REQUESTING_TRANSFER인 게시글 조회
+    @GetMapping("/status/requesting")
+    public ResponseEntity<List<PostDTO>> getPostsByStatusRequesting() {
+        System.out.println("호출됨");
+        List<PostDTO> posts = postService.getPostsByStatusRequesting();
+        return ResponseEntity.ok(posts);
+    }
+
+    // 상태가 TRANSFERRING인 게시글 조회
+    @GetMapping("/status/transferring")
+    public ResponseEntity<List<PostDTO>> getPostsByStatusTransferring() {
+        System.out.println("호출됨");
+        List<PostDTO> posts = postService.getPostsByStatusTransferring();
+        return ResponseEntity.ok(posts);
+    }
+
+    // 상태가 COMPLETED인 게시글 조회
+    @GetMapping("/status/completed")
+    public ResponseEntity<List<PostDTO>> getPostsByStatusCompleted() {
+        System.out.println("호출됨");
+        List<PostDTO> posts = postService.getPostsByStatusCompleted();
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PostDTO>> searchPostsByTitle(@RequestParam("keyword") String keyword) {
+        log.info("Search keyword: {}", keyword);
+        List<PostDTO> posts = postService.searchPostsByTitle(keyword);
+        // JSON 반환 데이터 로그 출력
+        for (PostDTO post : posts) {
+            log.info("Post Data - ID: {}, Title: {}, MemberId: {}, Status: {}, CreateTime: {}",
+                    post.getId(),
+                    post.getTitle() != null ? post.getTitle() : "No Title",
+                    post.getMemberId() != null ? post.getMemberId() : "Unknown User",
+                    post.getStatus() != null ? post.getStatus() : "No Status",
+                    post.getCreateTime() != null ? post.getCreateTime().toString() : "No Date"
+            );
+        }
+
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint() {
+        System.out.println("Test endpoint 호출됨");
+        return ResponseEntity.ok("Test successful");
+    }
 
     // 게시글 목록 페이지
     @GetMapping("/list")
@@ -141,13 +196,20 @@ public class PostController {
 
     // 게시글 수정 페이지
     @GetMapping("/edit")
-    public String editPost() {
+    public String editPost(@RequestParam("id") int id, Model model) {
+        PostDTO post = postService.getPostById(id);
+
+        System.out.println("Edit Page - File URL: " + post.getFileUrl());
+        model.addAttribute("post", post);
         return "edit";
     }
 
     // 게시글 자세히 보기 페이지
     @GetMapping("/view")
-    public String viewPost() {
+    public String viewPost(@RequestParam("id") int id, Model model) {
+        PostDTO post = postService.getPostById(id);
+
+        model.addAttribute("post", post);
         return "view";
     }
 }
