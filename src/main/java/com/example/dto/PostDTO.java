@@ -21,12 +21,24 @@ public class PostDTO {
     private String address;
     private Status status;
 
+    private String memberId; // 사용자 아이디
+
     @JsonProperty("mId")
     private int mId;
 
+    public int getMid() {
+        return mId;
+    }
+
+    public void setMid(int mId) {
+        this.mId = mId;
+    }
+
     public enum Status {
         // 양도 구하는 중/ 양도 중 / 양도 완료
-        REQUESTING_TRANSFER , TRANSFERRING, COMPLETED
+        REQUESTING_TRANSFER,
+        TRANSFERRING,
+        COMPLETED
 
     }
 
