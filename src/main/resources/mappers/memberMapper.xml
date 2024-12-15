@@ -39,4 +39,7 @@
         WHERE memberId = #{memberId}
         AND password = #{password}
     </select>
+
+
+
 </mapper>

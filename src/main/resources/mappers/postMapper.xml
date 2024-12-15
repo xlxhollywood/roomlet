@@ -41,6 +41,7 @@
     <select id="selectAllPosts" resultType="com.example.dto.PostDTO">
         SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
         FROM post
+        ORDER BY createTime DESC
     </select>
 
     <!-- PostMapper.xml -->
@@ -49,5 +50,43 @@
         FROM post
         WHERE id = #{postId}
     </select>
+
+    <!-- 게시글 ID로 파일 URL 조회 -->
+    <select id="getFileUrlByPostId" resultType="String">
+        SELECT file_url
+        FROM post
+        WHERE id = #{postId}
+        </select>
+
+    <!-- 상태가 REQUESTING_TRANSFER인 게시글 조회 -->
+    <select id="selectPostsByStatusRequesting" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
+        FROM post
+        WHERE status = 'REQUESTING_TRANSFER'
+    </select>
+
+    <!-- 상태가 TRANSFERRING인 게시글 조회 -->
+    <select id="selectPostsByStatusTransferring" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
+        FROM post
+        WHERE status = 'TRANSFERRING'
+    </select>
+
+    <!-- 상태가 COMPLETED인 게시글 조회 -->
+    <select id="selectPostsByStatusCompleted" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
+        FROM post
+        WHERE status = 'COMPLETED'
+    </select>
+
+    <!-- 제목에 특정 키워드가 포함된 게시물 검색 -->
+    <select id="searchPostsByTitle" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
+        FROM post
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <!--  키워드 필터링 동시  -->
+
 
 </mapper>
