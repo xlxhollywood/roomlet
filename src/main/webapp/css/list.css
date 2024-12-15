@@ -62,55 +62,55 @@
     color: #7e46dd;
 }
 
-.container {
-    padding: 80px 110px !important;
-}
-
-/* 라디오 버튼 */
-.form-check-inline {
-    margin-right: 30px;
-}
-
-.form-check-label {
-    margin-left: 5px;
-}
-
-/* text area */
-textarea.form-control {
-    height: 200px;
-}
-
-/* 라디오 버튼 */
-.form-check-input:checked {
+.search-btn {
     background-color: #985DFF !important;
     border-color: #985DFF !important;
 }
 
-/* submit 버튼 */
-.btn-primary {
-    background-color: #985DFF !important;
-    border-color: #985DFF !important;
-    color: white;
-    width: 150px;
+.search-btn:hover {
+    background-color: #7b2eff !important;
+    border-color: #7b2eff !important;
 }
 
-.btn-primary:hover {
-    background-color: #B18CFF !important;
-    border-color: #B18CFF !important;
+/* 테이블 */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
-/* cancel 버튼 */
-.btn-outline-primary {
-    border-color: #985DFF !important;
-    width: 150px;
+.table-hover tbody tr {
+    height: 50px;
 }
 
-.c-fc-ppl{
-    color: #985DFF !important;
+.table-hover tbody td,
+.table-hover thead th {
+    font-weight: normal;
+    font-size: 15px;
 }
 
-.btn-outline-primary:hover {
-    color: white !important;
-    background-color: #B18CFF !important;
-    border-color: #B18CFF !important;
+/* 테이블 머리글 */
+.table-light th {
+    background-color: #f2edfd !important;
+    font-weight: normal;
+    font-size: 15px;
+}
+
+.badge.text-bg-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge.text-bg-secondary {
+    background-color: #d6d8db;
+    color: #495057;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
 }
