@@ -15,6 +15,8 @@
 
     <!-- Static resource handling -->
     <mvc:resources mapping="/img/**" location="/resources/img/" />
+    <mvc:resources mapping="/css/**" location="/css/" />
+    <mvc:resources mapping="/resources/img/**" location="/resources/img/" />
 
     <!-- JSP view resolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -30,4 +32,17 @@
         <property name="maxUploadSizePerFile" value="20971520" />
         <property name="defaultEncoding" value="UTF-8" />
     </bean>
+    <bean id="loginCheckInterceptor" class="com.example.interceptor.LoginInterceptor"  />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <mvc:exclude-mapping path="/css/**"/>
+            <mvc:exclude-mapping path="/img/**"/>
+            <mvc:exclude-mapping path="/login/**"/>
+            <mvc:exclude-mapping path="/loginOk/**"/>
+            <mvc:exclude-mapping path="/members/register"/>
+            <ref bean="loginCheckInterceptor" />
+        </mvc:interceptor></mvc:interceptors>
+
 </beans>
