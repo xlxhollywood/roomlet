@@ -41,7 +41,9 @@
     <select id="selectAllPosts" resultType="com.example.dto.PostDTO">
         SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
         FROM post
-        ORDER BY createTime DESC
+        <if test="keyword != null and keyword != ''">
+            WHERE title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
     </select>
 
     <!-- PostMapper.xml -->
@@ -86,7 +88,12 @@
         WHERE title LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
-    <!--  키워드 필터링 동시  -->
-
+    <!-- status, title 에 따른 검색 결과 -->
+    <select id="searchPostsByTitleAndStatus" resultType="com.example.dto.PostDTO">
+        SELECT id, title, contents, kakaoUrl, createTime, updateTime, fileUrl, address, status, memberId AS mId
+        FROM post
+        WHERE status = #{status}
+        AND title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
 
 </mapper>

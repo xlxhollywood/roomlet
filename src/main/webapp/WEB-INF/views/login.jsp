@@ -28,7 +28,7 @@
                 if (response.status === 200) {
                     // 로그인 성공(200)
                     alert("Login successful");
-                    window.location.href = '${pageContext.request.contextPath}/posts/list'; // 성공 시 리스트 페이지로 이동
+                    window.location.href = '${pageContext.request.contextPath}/posts/list/all'; // 성공 시 리스트 페이지로 이동
                 } else if (response.status === 500) {
                     // 로그인 실패(500)
                     document.getElementById("errorMessageContainer").style.display = "block";

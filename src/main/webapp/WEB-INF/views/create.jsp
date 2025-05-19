@@ -39,7 +39,7 @@
             }).then(response => {
                 if (response.ok) {
                     alert("게시 성공!");
-                    window.location.href = "${pageContext.request.contextPath}/posts/list";
+                    window.location.href = "${pageContext.request.contextPath}/posts/list/all";
                 } else {
                     alert("게시에 실패하였습니다.");
                 }

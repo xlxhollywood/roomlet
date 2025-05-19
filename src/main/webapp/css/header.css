@@ -21,7 +21,7 @@ header .logo {
 
 header .nav {
     display: flex;
-    gap: 170px;
+    gap: 140px;
 }
 
 header .nav .nav-link {

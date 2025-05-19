@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -104,74 +105,34 @@ public class PostController {
         return ResponseEntity.ok("edit complete");
     }
 
+    @GetMapping("/delete")
+    public String deletePost(@RequestParam("id") int id, RedirectAttributes redirectAttributes, HttpSession session) {
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable int id, HttpSession session) {
-        // 로그인 사용자 정보 가져오기
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
         if (loginUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please log in first.");
+            redirectAttributes.addFlashAttribute("alertMessage", "로그인이 필요합니다.");
+            return "redirect:/login";
         }
 
-        // 게시글 작성자 확인
-        int postOwnerId = postService.getPostOwnerId(id); // DB에서 작성자 ID 조회
-        System.out.println("작성자 ID: " + postOwnerId + ", 로그인된 사용자 ID: " + loginUser.getId());
-
+        int postOwnerId = postService.getPostOwnerId(id);
         if (loginUser.getId() != postOwnerId) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("DELETE: UNAUTHORIZED REQUEST.");
+            redirectAttributes.addFlashAttribute("alertMessage", "권한이 없습니다.");
+            return "redirect:/posts/list";
         }
 
-        // 게시글 삭제
-        postService.deletePost(id);
-        return ResponseEntity.ok("delete complete");
+        try {
+            postService.deletePost(id);
+            redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "게시글 삭제 중 오류가 발생했습니다.");
+        }
+        return "redirect:/posts/list";
     }
 
     @PostMapping("/files")
     public ResponseEntity<?> uploadFile(@RequestParam("multipartFile") List<MultipartFile> multipartFiles) {
         List<String> uploadedFiles = awsS3Service.uploadFile(multipartFiles);
         return ResponseEntity.ok(uploadedFiles);
-    }
-
-    // 상태가 REQUESTING_TRANSFER인 게시글 조회
-    @GetMapping("/status/requesting")
-    public ResponseEntity<List<PostDTO>> getPostsByStatusRequesting() {
-        System.out.println("호출됨");
-        List<PostDTO> posts = postService.getPostsByStatusRequesting();
-        return ResponseEntity.ok(posts);
-    }
-
-    // 상태가 TRANSFERRING인 게시글 조회
-    @GetMapping("/status/transferring")
-    public ResponseEntity<List<PostDTO>> getPostsByStatusTransferring() {
-        System.out.println("호출됨");
-        List<PostDTO> posts = postService.getPostsByStatusTransferring();
-        return ResponseEntity.ok(posts);
-    }
-
-    // 상태가 COMPLETED인 게시글 조회
-    @GetMapping("/status/completed")
-    public ResponseEntity<List<PostDTO>> getPostsByStatusCompleted() {
-        System.out.println("호출됨");
-        List<PostDTO> posts = postService.getPostsByStatusCompleted();
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<PostDTO>> searchPostsByTitle(@RequestParam("keyword") String keyword) {
-        log.info("Search keyword: {}", keyword);
-        List<PostDTO> posts = postService.searchPostsByTitle(keyword);
-        // JSON 반환 데이터 로그 출력
-        for (PostDTO post : posts) {
-            log.info("Post Data - ID: {}, Title: {}, MemberId: {}, Status: {}, CreateTime: {}",
-                    post.getId(),
-                    post.getTitle() != null ? post.getTitle() : "No Title",
-                    post.getMemberId() != null ? post.getMemberId() : "Unknown User",
-                    post.getStatus() != null ? post.getStatus() : "No Status",
-                    post.getCreateTime() != null ? post.getCreateTime().toString() : "No Date"
-            );
-        }
-
-        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/test")
@@ -181,12 +142,12 @@ public class PostController {
     }
 
     // 게시글 목록 페이지
-    @GetMapping("/list")
-    public String getPostList(Model model) {
-        List<PostDTO> posts = postService.getAllPosts();
-        model.addAttribute("posts", posts);
-        return "list";
-    }
+//    @GetMapping("/list")
+//    public String getPostList(Model model) {
+//        List<PostDTO> posts = postService.getAllPosts();
+//        model.addAttribute("posts", posts);
+//        return "list";
+//    }
 
     // 게시글 추가 페이지
     @GetMapping("/create")

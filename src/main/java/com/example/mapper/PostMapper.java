@@ -31,5 +31,6 @@ public interface PostMapper {
     // 제목에 특정 글자가 포함된 게시물 검색
     List<PostDTO> searchPostsByTitle(@Param("keyword") String keyword);
 
-
+    // 제목, 상태로 검색
+    List<PostDTO> searchPostsByTitleAndStatus(@Param("keyword") String keyword, @Param("status") String status);
 }

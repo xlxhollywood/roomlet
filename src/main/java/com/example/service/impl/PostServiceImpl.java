@@ -75,7 +75,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(int id) {
-         postMapper.deletePostById(id);
+        postMapper.deletePostById(id);
     }
 
     public int getPostOwnerId(int postId) {
@@ -106,6 +106,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> searchPostsByTitle(String keyword) {
         return postMapper.searchPostsByTitle(keyword);
+    }
+
+    // 검색 시 상태도 반영
+    public List<PostDTO> searchPostsByTitleAndStatus(String keyword, String status) {
+        return postMapper.searchPostsByTitleAndStatus(keyword, status);
     }
 
 }

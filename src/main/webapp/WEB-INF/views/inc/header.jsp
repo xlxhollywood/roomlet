@@ -13,13 +13,14 @@
 <div class="container-fluid">
     <header class="d-flex align-items-center justify-content-between py-3 mb-4">
         <div class="logo-cont">
-            <a href="${pageContext.request.contextPath}/posts/list" class="d-inline-flex align-items-center text-decoration-none">
+            <a href="${pageContext.request.contextPath}/posts/list/all" class="d-inline-flex align-items-center text-decoration-none">
                 <img src="${pageContext.request.contextPath}/resources/img/logo.png" alt="logo" class="logo">
             </a>
         </div>
 
         <ul class="nav">
-            <li><a href="${pageContext.request.contextPath}/posts/list" class="nav-link">양도 글보기</a></li>
+            <li><a href="${pageContext.request.contextPath}/posts/list" class="nav-link">양도구해요</a></li>
+            <li><a href="${pageContext.request.contextPath}/posts/transferring" class="nav-link">양도해요</a></li>
             <li><a href="${pageContext.request.contextPath}/posts/create" class="nav-link">글쓰기</a></li>
         </ul>
 

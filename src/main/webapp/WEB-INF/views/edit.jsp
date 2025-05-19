@@ -34,7 +34,7 @@
             }).then(response => {
                 if (response.ok) {
                     alert("수정이 완료되었습니다.");
-                    window.location.href = "${pageContext.request.contextPath}/posts/list";
+                    window.location.href = "${pageContext.request.contextPath}/posts/list/all";
                 } else if (response.status === 403) {
                     alert("글 작성자만 수정이 가능합니다!");
                 } else if (response.status === 401) {
@@ -123,7 +123,7 @@
 
         <%-- 저장 버튼 --%>
         <div class="d-flex justify-content-between mt-4">
-            <button type="button" class="btn btn-outline-primary c-fc-ppl" onclick="window.location.href='${pageContext.request.contextPath}/posts/list'">Cancel</button>
+            <button type="button" class="btn btn-outline-primary c-fc-ppl" onclick="window.location.href='${pageContext.request.contextPath}/posts/list/all'">Cancel</button>
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
